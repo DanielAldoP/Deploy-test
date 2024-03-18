@@ -28,6 +28,20 @@ app.get('/waifu', (req, res) => {
     });
 })
 
+app.get('/pokemon/:name', (req, res) => {
+  const name = req.params.name
+  axios.get(`https://ex.traction.one/pokedex/pokemon/${name}`)
+  .then((response) => {
+  // handle success
+      const pokemons = response.data;
+      res.status(200).json(pokemons)
+  })
+  .catch((error) => {
+  // handle error
+      res.send(error.response.data.detail)
+  });
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
