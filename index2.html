@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .pokemon-info {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .pokemon-info img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Pokémon Viewer</h1>
+
+<form id="pokemonForm">
+    <label for="pokemonName">Enter Pokémon Name:</label>
+    <input type="text" id="pokemonName" name="pokemonName" required>
+    <button type="submit">Get Pokémon Info</button>
+</form>
+
+<div id="pokemonInfo"></div>
+
+<script>
+    document.getElementById('pokemonForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const pokemonName = document.getElementById('pokemonName').value.toLowerCase();
+        const response = await fetch(`https://rich-blue-dugong-vest.cyclic.app/pokemon/${pokemonName}`);
+        const data = await response.json();
+        displayPokemonInfo(data);
+    });
+
+    function displayPokemonInfo(pokemonData) {
+        const pokemonInfoDiv = document.getElementById('pokemonInfo');
+        pokemonInfoDiv.innerHTML = '';
+
+        pokemonData.forEach(function(pokemon) {
+            const pokemonContainer = document.createElement('div');
+            pokemonContainer.classList.add('pokemon-info');
+
+            const nameHeading = document.createElement('h2');
+            nameHeading.textContent = pokemon.name;
+            pokemonContainer.appendChild(nameHeading);
+
+            const spriteImg = document.createElement('img');
+            spriteImg.src = pokemon.sprite;
+            spriteImg.alt = pokemon.name;
+            pokemonContainer.appendChild(spriteImg);
+
+            const typesParagraph = document.createElement('p');
+            typesParagraph.textContent = 'Types: ' + pokemon.types.join(', ');
+            pokemonContainer.appendChild(typesParagraph);
+
+            const abilitiesList = document.createElement('ul');
+            abilitiesList.innerHTML = '<strong>Abilities:</strong>';
+            pokemon.abilities.forEach(function(ability) {
+                const abilityItem = document.createElement('li');
+                abilityItem.textContent = ability.name + ': ' + ability.description;
+                abilitiesList.appendChild(abilityItem);
+            });
+            pokemonContainer.appendChild(abilitiesList);
+
+            const heightParagraph = document.createElement('p');
+            heightParagraph.textContent = 'Height: ' + pokemon.height;
+            pokemonContainer.appendChild(heightParagraph);
+
+            const weightParagraph = document.createElement('p');
+            weightParagraph.textContent = 'Weight: ' + pokemon.weight;
+            pokemonContainer.appendChild(weightParagraph);
+
+            const baseStatsParagraph = document.createElement('p');
+            baseStatsParagraph.textContent = 'Base Stats: ' + JSON.stringify(pokemon.baseStats);
+            pokemonContainer.appendChild(baseStatsParagraph);
+
+            pokemonInfoDiv.appendChild(pokemonContainer);
+        });
+    }
+</script>
+
+</body>
+</html>
