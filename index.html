@@ -103,12 +103,12 @@
         const result = checkDigit(pan);
         
         const resultDiv = document.getElementById('checkDigitResult');
-        resultDiv.innerHTML = '';
+        resultDiv.innerHTML = ''; // Clear previous results
 
         if (result === false) {
-            resultDiv.textContent = 'Invalid PAN: Check digit does not match.';
+            resultDiv.textContent = `Invalid PAN "${pan}": Check digit does not match.`;
         } else {
-            resultDiv.textContent = 'Check Digit: ' + result;
+            resultDiv.textContent = `PAN "${pan}${result}"`;
         }
     });
 
