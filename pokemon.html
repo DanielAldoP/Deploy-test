@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        .pokemon-info {
+        .pokemon-info, .check-digit-result {
             margin-bottom: 20px;
             border: 1px solid #ccc;
             padding: 10px;
@@ -25,6 +25,7 @@
 
 <h1>Pokémon Viewer</h1>
 
+<!-- Pokémon Info Form -->
 <form id="pokemonForm">
     <label for="pokemonName">Enter Pokémon Name:</label>
     <input type="text" id="pokemonName" name="pokemonName" required>
@@ -33,7 +34,18 @@
 
 <div id="pokemonInfo"></div>
 
+<!-- Check Digit Form -->
+<h2>Check Digit Validator</h2>
+<form id="checkDigitForm">
+    <label for="pan">Enter PAN:</label>
+    <input type="text" id="pan" name="pan" required>
+    <button type="submit">Check Digit</button>
+</form>
+
+<div id="checkDigitResult" class="check-digit-result"></div>
+
 <script>
+    // Fetch Pokémon Information
     document.getElementById('pokemonForm').addEventListener('submit', async function(event) {
         event.preventDefault();
         const pokemonName = document.getElementById('pokemonName').value.toLowerCase();
@@ -86,6 +98,35 @@
 
             pokemonInfoDiv.appendChild(pokemonContainer);
         });
+    }
+
+    // Check Digit Validator
+    document.getElementById('checkDigitForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const pan = document.getElementById('pan').value;
+
+        try {
+            const response = await fetch('/check-digit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pan })
+            });
+            const result = await response.json();
+            displayCheckDigitResult(result);
+        } catch (error) {
+            displayCheckDigitResult({ error: error.message });
+        }
+    });
+
+    function displayCheckDigitResult(result) {
+        const checkDigitResultDiv = document.getElementById('checkDigitResult');
+        checkDigitResultDiv.innerHTML = '';
+
+        if (result.error) {
+            checkDigitResultDiv.textContent = `Error: ${result.error}`;
+        } else {
+            checkDigitResultDiv.textContent = `Check Digit Result: ${result}`;
+        }
     }
 </script>
 
