@@ -17,15 +17,22 @@
 <div id="checkDigitResult"></div>
 
 <script>
+    // JavaScript to handle the form submission
     document.getElementById('checkDigitForm').addEventListener('submit', async function(event) {
+        // Prevents the default form submission
         event.preventDefault();
+
+        // Get the PAN value from the input box
         const pan = document.getElementById('pan').value;
 
+        // Fetch request with the PAN in the query parameter
         try {
-            // Update this URL to the actual backend endpoint (e.g., 'http://localhost:<port>/check-digit')
+            // Update the URL to your server’s endpoint
             const response = await fetch(`/check-digit?pan=${encodeURIComponent(pan)}`, {
                 method: 'GET'
             });
+
+            // Parse the response as JSON
             const result = await response.json();
             displayCheckDigitResult(result);
         } catch (error) {
@@ -33,6 +40,7 @@
         }
     });
 
+    // Function to display the check digit result
     function displayCheckDigitResult(result) {
         const checkDigitResultDiv = document.getElementById('checkDigitResult');
         checkDigitResultDiv.innerHTML = '';
